@@ -15,8 +15,20 @@ public class AgentDetection : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        RaycastHit hitData;
-        if(Physics.Raycast(transform.position, agentTarget.position - transform.position, out hitData)){
+        RaycastHit hitData; // Info del rayo
+        Vector3 directionToTarget = (agentTarget.position - transform.position).normalized; // Direccion del rayo
+        int distanceToAgent = 15; // Distancia del rayo
+        float agentsDistance= Vector3.Distance(agentTarget.position, transform.position); // Distancia entre los dos agentes
+
+        Debug.DrawRay(transform.position, directionToTarget * distanceToAgent, Color.yellow);
+        
+    // Si cumple el raycast y la distancia entre agentes es menor que la distancia del rayo
+        if(agentsDistance < distanceToAgent){
+            agent.destination = agentTarget.position;
+            
+            Debug.Log("Va al agent");
+        } else {
+            Debug.Log("Va al punto inicial");
             agent.destination = initialPoint.position;
         }
     }
@@ -24,6 +36,6 @@ public class AgentDetection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        agent.destination = agentTarget.position;
+        //agent.destination = agentTarget.position;
     }
 }
