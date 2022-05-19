@@ -23,10 +23,10 @@ public class AgentDetection : MonoBehaviour
         Debug.DrawRay(transform.position, directionToTarget * distanceToAgent, Color.yellow);
         
     // Si cumple el raycast y la distancia entre agentes es menor que la distancia del rayo
-        if(agentsDistance < distanceToAgent){
+        if(Physics.Raycast(transform.position, directionToTarget, out hitData, distanceToAgent, -1, QueryTriggerInteraction.Ignore) && hitData.collider.tag == "Agent"){
             agent.destination = agentTarget.position;
-            
-            Debug.Log("Va al agent");
+            Debug.Log("Va al agent"); 
+
         } else {
             Debug.Log("Va al punto inicial");
             agent.destination = initialPoint.position;
