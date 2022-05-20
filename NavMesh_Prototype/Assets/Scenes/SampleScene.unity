@@ -2305,7 +2305,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672917434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.9, y: 6.522, z: 0.16}
+  m_LocalPosition: {x: -8.86, y: 6.522, z: 0.16}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 1294968128}
@@ -3822,7 +3822,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 946445046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.721, y: 6.622, z: -1.142}
+  m_LocalPosition: {x: -3.5, y: 6.622, z: -1.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5674,6 +5674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentTarget: {fileID: 672917440}
   initialPoint: {fileID: 946445047}
+  vision: {fileID: 1678951507}
 --- !u!195 &1495196209
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5767,7 +5768,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495196207}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.23, y: 6.522, z: -0.64}
+  m_LocalPosition: {x: -3.48, y: 6.522, z: -2.5}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 1678951507}
