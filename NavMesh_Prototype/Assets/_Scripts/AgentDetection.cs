@@ -7,6 +7,9 @@ public class AgentDetection : MonoBehaviour
 {
     public Transform agentTarget;
     public Transform initialPoint;
+    public Transform routePoint1;
+    public Transform routePoint2;
+
     NavMeshAgent agent;
     AgentState state;
     private Vector3 destination;
@@ -22,9 +25,10 @@ public class AgentDetection : MonoBehaviour
     private void FixedUpdate() {
 
         bool inRangeAndVisible = IsInRangeAndVisible();
+        bool inRange = IsInRange();
         
-        
-        switch(state) // Dicho switch llamará al metodo que establece los estados
+        // Dicho switch llamará al metodo que establece los estados
+        switch(state) 
         {
             case AgentState.Idle:
                 if(inRangeAndVisible){ 
@@ -44,14 +48,21 @@ public class AgentDetection : MonoBehaviour
                     SetState(AgentState.Chasing);
                 } else if(agent.isStopped){
                     SetState(AgentState.Idle);
-                }
+                } 
                 break;
+            
         }
 
         agent.destination = destination; // En todo momento el agente tendrá un destino
         
     }
 
+    private bool IsInRange(){
+        float agentsDistance= Vector3.Distance(agentTarget.position, transform.position); // Distancia entre los dos agentes
+        int distanceToAgent = 20; // Distancia 
+
+        return (agentsDistance < distanceToAgent);
+    }
 
 
     private bool IsInRangeAndVisible(){
@@ -64,12 +75,12 @@ public class AgentDetection : MonoBehaviour
         float angleLimit = 30f;
 
         // Limites para dibujar los rayos
-        Vector3 leftLimit = Quaternion.AngleAxis(-angleLimit, transform.forward) * transform.forward;
-        Vector3 rightLimit = Quaternion.AngleAxis(angleLimit, transform.forward) * transform.forward;
+        Vector3 leftLimit = Quaternion.AngleAxis(angleLimit, transform.forward) * transform.forward;
+        Vector3 rightLimit = Quaternion.AngleAxis(-angleLimit, transform.forward) * transform.forward;
 
-        Debug.DrawRay(transform.position, directionToTarget * distanceToAgent, Color.yellow);
-        Debug.DrawRay(transform.position, leftLimit * 10, Color.red);
-        Debug.DrawRay(transform.position, rightLimit * 10, Color.green);
+        Debug.DrawLine(transform.position, directionToTarget * distanceToAgent, Color.yellow);
+        Debug.DrawLine(transform.position, leftLimit * 10, Color.red);
+        Debug.DrawLine(transform.position, rightLimit * 10, Color.green);
 
         // Devuelvo la condición: Si cumple el raycast, la distancia entre agentes es menor que la distancia del rayo y el angulo es menor que 30
         return (Physics.Raycast(transform.position, directionToTarget, out hitData, distanceToAgent, -1, QueryTriggerInteraction.Ignore) && hitData.collider.tag == "Agent" && angle < angleLimit);
@@ -82,26 +93,29 @@ public class AgentDetection : MonoBehaviour
     /// <param name="newState"> Nuevo estado </param>
     void SetState(AgentState newState){
         if(newState != state){
+            Debug.Log("new state" + newState);
             state = newState;
             switch(newState){
                 case AgentState.Idle:
-                    destination = transform.position;
                     break;
                 case AgentState.Chasing:
-                    destination = agentTarget.position;
                     break;
                 case AgentState.Returning:
                     destination = initialPoint.position; // Estado Return: Vuelve a su posicion inicial
                     break;
+
             }
         }
         
     }
+
+
 
 }
 
 public enum AgentState{
     Idle, // Esperando
     Chasing, // Persigue
-    Returning // Vuelve a su posicion
+    Returning, // Vuelve a su posicion 
+    Centinela
 }
