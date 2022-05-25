@@ -18,7 +18,7 @@ public class AgentDetection : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        state = AgentState.Idle;
+        state = AgentState.Centinela;
         destination = transform.position;
     }
 
@@ -30,10 +30,23 @@ public class AgentDetection : MonoBehaviour
         // Dicho switch llamará al metodo que establece los estados
         switch(state) 
         {
-            case AgentState.Idle:
+            case AgentState.Centinela:
                 if(inRangeAndVisible){ 
                     SetState(AgentState.Chasing);
-                }
+                } else if(destination == initialPoint.position){
+                    destination = routePoint1.position;
+                    if(destination == routePoint1.position){
+                        //SetState(AgentState.Stop);
+                        destination = routePoint2.position;
+                        Debug.Log("Al punto 2");
+                    } else if(transform.position == routePoint2.position){
+                        //SetState(AgentState.Stop);
+                        destination = routePoint1.position;
+                    }
+                } //else if (destination == routePoint1.position || destination == routePoint2.position){
+                    //SetState(AgentState.Stop);
+               // }
+                
                 break;
             case AgentState.Chasing:
                 if(! inRangeAndVisible){
@@ -46,9 +59,14 @@ public class AgentDetection : MonoBehaviour
             case AgentState.Returning:
                 if(inRangeAndVisible){
                     SetState(AgentState.Chasing);
-                } else if(agent.isStopped){
-                    SetState(AgentState.Idle);
-                } 
+                } else if(agent.isStopped || destination == initialPoint.position){
+                    SetState(AgentState.Centinela);
+                }
+                break;
+            case AgentState.Stop:
+                if(inRangeAndVisible){
+                    SetState(AgentState.Chasing);
+                }
                 break;
             
         }
@@ -96,25 +114,33 @@ public class AgentDetection : MonoBehaviour
             Debug.Log("new state" + newState);
             state = newState;
             switch(newState){
-                case AgentState.Idle:
+                case AgentState.Centinela:
                     break;
                 case AgentState.Chasing:
                     break;
                 case AgentState.Returning:
                     destination = initialPoint.position; // Estado Return: Vuelve a su posicion inicial
                     break;
-
+                case AgentState.Stop:
+                    destination = transform.position;
+                    SetState(AgentState.Centinela);
+                    break;
             }
         }
         
     }
 
-
+    IEnumerator Stop(){
+        while(state == AgentState.Stop) {
+            yield return new WaitForSeconds(5f);
+            SetState(AgentState.Centinela);
+        }
+    }
 
 }
 
 public enum AgentState{
-    Idle, // Esperando
+    Stop, // Esperando
     Chasing, // Persigue
     Returning, // Vuelve a su posicion 
     Centinela
